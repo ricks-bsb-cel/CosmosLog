@@ -36,8 +36,17 @@ namespace CosmosLog
                 SubCategory = obj["SubCategory"].ToString()! ?? "Default",
                 Level = obj["Level"].ToString()! ?? "Info",
                 logPayload = (JObject)obj["logPayload"],
-                Ttl = CosmosHelper.TtlDias(15)
+                ttl = CosmosHelper.TtlDias(15)
             };
+
+            if (obj["Ttl"] != null)
+            {
+                long _ttl;
+                if (long.TryParse(obj["Ttl"].ToString(), out _ttl))
+                {
+                    logData.ttl = _ttl;
+                }
+            }
 
             _ctx.CosmosLog.Add(logData);
             int success = await _ctx.SaveChangesAsync();

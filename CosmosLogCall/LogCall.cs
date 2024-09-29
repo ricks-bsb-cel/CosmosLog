@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Azure.Messaging.ServiceBus;
 using System.Text.Json;
+using Newtonsoft.Json.Linq;
 
 namespace CosmosLogCall
 {
@@ -14,6 +15,8 @@ namespace CosmosLogCall
         private readonly ServiceBusClient sbClient;
         private readonly ServiceBusSender sbSender;
 
+        private long? Ttl = null;
+
         public LogCall(IConfiguration configuration)
         {
             CosmosLogServiceBusConnection = configuration["CosmosLogServiceBusConnectionSender"]! ?? configuration["Values:CosmosLogServiceBusConnectionSender"]!;
@@ -25,6 +28,11 @@ namespace CosmosLogCall
             sbClient = new ServiceBusClient(CosmosLogServiceBusConnection);
 
             sbSender = sbClient.CreateSender(queueName);
+        }
+
+        public void SetTtl(long ttlSeconds)
+        {
+            this.Ttl = ttlSeconds;
         }
 
         public async Task<LogResult> send(
@@ -43,7 +51,11 @@ namespace CosmosLogCall
                 logPayload = log
             };
 
+            if (this.Ttl != null) logMessage.Ttl = Ttl.Value;
+
             string jsonMessage = JsonSerializer.Serialize(logMessage);
+
+            // jsonMessage = jsonMessage.Replace("{obj}", JsonSerializer.Serialize(log));
 
             ServiceBusMessage message = new ServiceBusMessage(jsonMessage);
 

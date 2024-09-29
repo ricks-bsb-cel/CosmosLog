@@ -1,4 +1,6 @@
-﻿namespace CosmosLogCall
+﻿using Newtonsoft.Json.Linq;
+
+namespace CosmosLogCall
 {
     public class LogModel
     {
@@ -6,7 +8,7 @@
         public string Category { get; set; } = "Unknow";
         public string SubCategory { get; set; } = "Unknow";
         public string Level { get; set; } = "Info";
-
-        public Object? logPayload { get; set; }
+        public object? logPayload { get; set; }
+        public long? Ttl { get; set; }
     }
 }

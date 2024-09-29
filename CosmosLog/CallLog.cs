@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http.Json;
 using Newtonsoft.Json.Linq;
 using CosmosLogCall;
+using System.Text.Json;
 
 namespace CosmosLog
 {
@@ -29,8 +30,9 @@ namespace CosmosLog
 
         [Function("CallLog")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")]
-            HttpRequest req
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "log")]
+            HttpRequest req,
+            string ttl
         )
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -38,7 +40,19 @@ namespace CosmosLog
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (string.IsNullOrEmpty(requestBody)) return new BadRequestResult();
 
-            JObject requestObj = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(requestBody);
+            object requestObj = JsonSerializer.Deserialize<object>(requestBody)!;
+            if (requestObj == null) return new BadRequestResult();
+
+            if (!string.IsNullOrEmpty(ttl))
+            {
+                long _ttl;
+
+                if (long.TryParse(ttl, out _ttl))
+                {
+                    log.SetTtl(_ttl);
+                }
+            }
+
             LogResult sendResult = await log.send(requestObj);
 
             return new OkObjectResult(sendResult);
