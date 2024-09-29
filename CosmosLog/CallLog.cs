@@ -1,11 +1,9 @@
+using CosmosLogCall;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http.Json;
-using Newtonsoft.Json.Linq;
-using CosmosLogCall;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace CosmosLog
