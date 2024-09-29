@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-
-namespace CosmosLogCall
+﻿namespace CosmosLogCall
 {
     public class LogModel
     {

@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Azure.Messaging.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 using System.Text.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CosmosLogCall
 {
@@ -54,8 +53,6 @@ namespace CosmosLogCall
             if (this.Ttl != null) logMessage.Ttl = Ttl.Value;
 
             string jsonMessage = JsonSerializer.Serialize(logMessage);
-
-            // jsonMessage = jsonMessage.Replace("{obj}", JsonSerializer.Serialize(log));
 
             ServiceBusMessage message = new ServiceBusMessage(jsonMessage);
 
