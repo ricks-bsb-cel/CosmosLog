@@ -11,18 +11,15 @@ namespace CosmosLogCall
         private readonly string queueName = "logqueue";
         private readonly string Source;
 
-        private readonly IConfiguration _configuration;
         private readonly ServiceBusClient sbClient;
         private readonly ServiceBusSender sbSender;
 
-
         public LogCall(IConfiguration configuration)
         {
-            _configuration = configuration;
-            CosmosLogServiceBusConnection = _configuration.GetConnectionString("CosmosLogServiceBusConnection")!;
-            Source = _configuration.GetConnectionString("CosmosLogSource")!;
+            CosmosLogServiceBusConnection = configuration["CosmosLogServiceBusConnectionSender"]! ?? configuration["Values:CosmosLogServiceBusConnectionSender"]!;
+            Source = configuration["CosmosLogSource"]!;
 
-            if (string.IsNullOrEmpty(CosmosLogServiceBusConnection)) throw new ArgumentException("CosmosLogServiceBusConnection não configurado");
+            if (string.IsNullOrEmpty(CosmosLogServiceBusConnection)) throw new ArgumentException("CosmosLogServiceBusConnectionSender não configurado");
             if (string.IsNullOrEmpty(Source)) throw new ArgumentException("Source (nome do sistema) não configurado");
 
             sbClient = new ServiceBusClient(CosmosLogServiceBusConnection);

@@ -14,7 +14,7 @@ namespace CosmosLog
         private readonly ILogger<CallLog> _logger;
         private readonly IConfiguration _configuration;
 
-        private readonly CosmosLogCall.LogCall log;
+        private readonly LogCall log;
 
         public CallLog(
             ILogger<CallLog> logger,
@@ -24,7 +24,7 @@ namespace CosmosLog
             _logger = logger;
             _configuration = configuration;
 
-            log = new CosmosLogCall.LogCall(_configuration);
+            log = new LogCall(_configuration);
         }
 
         [Function("CallLog")]

@@ -23,7 +23,7 @@ namespace CosmosLog
 
         [Function(nameof(TriggerLogQueue))]
         public async Task Run(
-            [ServiceBusTrigger("logQueue", Connection = "ServiceBusConnectionString")]
+            [ServiceBusTrigger("logQueue", Connection = "CosmosLogServiceBusConnectionListenner")]
             ServiceBusReceivedMessage message,
             ServiceBusMessageActions messageActions)
         {
@@ -31,7 +31,7 @@ namespace CosmosLog
 
             CosmosLogModel logData = new CosmosLogModel()
             {
-                Source = obj["source"].ToString()! ?? "Default",
+                Source = obj["Source"].ToString()! ?? "Default",
                 Category = obj["Category"].ToString()! ?? "Default",
                 SubCategory = obj["SubCategory"].ToString()! ?? "Default",
                 Level = obj["Level"].ToString()! ?? "Info",
