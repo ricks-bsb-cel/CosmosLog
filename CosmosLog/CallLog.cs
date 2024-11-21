@@ -55,5 +55,28 @@ namespace CosmosLog
 
             return new OkObjectResult(sendResult);
         }
+
+
+        [Function("CallLogLevel")]
+        public async Task<IActionResult> RunLevel(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "log/source/{source}")]
+            HttpRequest req,
+            string source
+        )
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            if (string.IsNullOrEmpty(requestBody)) return new BadRequestResult();
+
+            object requestObj = JsonSerializer.Deserialize<object>(requestBody)!;
+            if (requestObj == null) return new BadRequestResult();
+
+            log.SetSource(source);
+
+            LogResult sendResult = await log.send(requestObj);
+
+            return new OkObjectResult(sendResult);
+        }
     }
 }

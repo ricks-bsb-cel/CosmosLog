@@ -9,7 +9,7 @@ namespace CosmosLogCall
         // Substitua pelos seus valores
         private readonly string CosmosLogServiceBusConnection;
         private readonly string queueName = "logqueue";
-        private readonly string Source;
+        private string Source;
 
         private readonly ServiceBusClient sbClient;
         private readonly ServiceBusSender sbSender;
@@ -32,6 +32,11 @@ namespace CosmosLogCall
         public void SetTtl(long ttlSeconds)
         {
             this.Ttl = ttlSeconds;
+        }
+
+        public void SetSource(string source)
+        {
+            Source = source;
         }
 
         public async Task<LogResult> send(
